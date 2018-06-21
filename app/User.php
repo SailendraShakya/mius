@@ -5,6 +5,7 @@ namespace App;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\User;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -37,5 +38,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function guardians()
+    {
+        return $this->hasMany('App\Guardian');
     }
 }

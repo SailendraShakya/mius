@@ -13,14 +13,26 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('signup', 'AuthController@register');
-Route::post('login', 'AuthController@login');
+Route::post('signup', 'Api\AuthController@register');
+Route::post('login', 'Api\AuthController@login');
 
 Route::group(['prefix' => 'auth', 'middleware' => 'jwt.auth'], function () {
 
-    Route::get('user', 'AuthController@user');
-    Route::post('logout', 'AuthController@logout');
+    Route::get('user', 'Api\AuthController@user');
+    Route::post('logout', 'Api\AuthController@logout');
 
 });
 
-Route::middleware('jwt.refresh')->get('/token/refresh', 'AuthController@refresh');
+Route::group(['prefix' => 'profile', 'middleware' => 'jwt.auth'], function () {
+    Route::post('uploadImage', 'Api\ProfileController@uploadImage');
+});
+
+Route::group(['prefix' => 'guardian', 'middleware' => 'jwt.auth'], function () {
+	Route::get('', 'Api\GuardianController@index');
+	Route::post('store', 'Api\GuardianController@store');
+
+   });
+
+
+
+Route::middleware('jwt.refresh')->get('/token/refresh', 'Api\AuthController@refresh');
