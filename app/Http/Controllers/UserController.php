@@ -45,6 +45,8 @@ class UserController extends Controller
            return view('401');
         }
 
+        print_r($_POST);
+
         $this->validate(request(), [
             'name' => 'required',
             'password' => 'required|min:6'
