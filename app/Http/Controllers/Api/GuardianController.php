@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
 use App\User;
+use App\Guardian;
 
 class GuardianController extends Controller
 {
@@ -68,8 +69,7 @@ class GuardianController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $guardian = App\Guardian::find($id);
-
+        $guardian = Guardian::find($id);
         $guardian->name = $request->name;
         $guardian->email = $request->email;
         $guardian->phone = $request->phone;
@@ -89,9 +89,9 @@ class GuardianController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destory($id)
     {
-        $user = User::destroy($id);
+        $user = Guardian::destroy($id);
         return $user;
     }
 }
