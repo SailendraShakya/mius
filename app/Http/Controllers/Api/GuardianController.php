@@ -8,6 +8,7 @@ use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Http\Controllers\Controller;
 use App\User;
 use App\Guardian;
+use Response;
 
 class GuardianController extends Controller
 {
@@ -15,13 +16,18 @@ class GuardianController extends Controller
     //  * Display a listing of the resource.
     //  *
     //  * @return \Illuminate\Http\Response
-     
+
     public function index()
     {
-        $authUser = JWTAuth::parseToken()->authenticate();
-        $user = User::find($authUser->id);
-        $guardians = $user->guardians;
-        return $guardians;
+        try {
+            $authUser = JWTAuth::parseToken()->authenticate();
+            $user = User::find($authUser->id);
+            $guardians = $user->guardians;
+            return Response::json(['status'=>'sucess','data'=>$guardians], 200);
+        } catch (Exception $e) {
+            return Response::json(['status' => 'error',], 400);
+        }
+
     }
 
     /**
@@ -32,20 +38,24 @@ class GuardianController extends Controller
      */
     public function store(Request $request)
     {
+        try{
+            $authUser = JWTAuth::parseToken()->authenticate();
+            $user = User::find($authUser->id);
+            $guardian = $user->guardians()->create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'photo' => $request->photo,
+            'status' => $request->status,
+            'relationship' => $request->relationship,
+            'created_at' => now(),
+            'updated_at' => now()
+            ]);
+            return Response::json(['status'=>'sucess','data'=>$guardian], 200);
 
-        $authUser = JWTAuth::parseToken()->authenticate();
-        $user = User::find($authUser->id);
-        $guardian = $user->guardians()->create([
-        'name' => $request->name,
-        'email' => $request->email,
-        'phone' => $request->phone,
-        'photo' => $request->photo,
-        'status' => $request->status,
-        'relationship' => $request->relationship,
-        'created_at' => now(),
-        'updated_at' => now()
-        ]);
-        return $guardian;
+        }catch (Exception $e) {
+            return Response::json(['status' => 'error'], 400);
+        }
     }
 
     /**
@@ -79,8 +89,14 @@ class GuardianController extends Controller
         $guardian->created_at = now();
         $guardian->updated_at = now();
 
-        $guardian->save();
-        return $guardian;
+        if($guardian->save()){
+            return Response::json(['data' => 'Successfully updated'], 200);
+        }else{
+            return Response::json(['error' => $guardian->errors()], 400);
+        }
+
+        return Response::json(['data' => 'Successfully updated'], 200);
+        // return $guardian;
     }
 
     /**
