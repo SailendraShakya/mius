@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 
 Route::post('signup', 'Api\AuthController@register');
 Route::post('login', 'Api\AuthController@login');
+Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
+
 
 Route::group(['prefix' => 'auth', 'middleware' => 'jwt.auth'], function () {
 
