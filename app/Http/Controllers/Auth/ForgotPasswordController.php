@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use App\Notifications\CustomerResetPasswordNotification;
 
-
+// use Validator;
 
 use App\Transformers\Json;
 use App\User;
@@ -48,31 +48,42 @@ class ForgotPasswordController extends Controller
      */
     public function getResetToken(Request $request)
     {
-        $this->validate($request, ['email' => 'required|email']);
-        $user = User::where('email', $request->input('email'))->first();
-        if (!$user) {
-            return response()->json(Json::response(null, trans('passwords.user')), 400);
+        if(!$request->has('email')){
+          return response()->json(['success' => false, 'message' => 'Invalid key'], 400);
         }
-        $token = $this->broker()->createToken($user);
+        try {
+          $this->validate($request, ['email' => 'required|email']);
+          $user = User::where('email', $request->input('email'))->first();
+          if (!$user) {
+              return response()->json(Json::response(null, trans('passwords.user')), 400);
+          }
+          $token = $this->broker()->createToken($user);
+          $response = $this->broker()->sendResetLink(
+          $request->only('email'), $this->resetNotifier($token)
+          );
 
-        $response = $this->broker()->sendResetLink(
-        $request->only('email'), $this->resetNotifier($token)
-        );
+          switch ($response) {
+          case Password::RESET_LINK_SENT:
+          return response()->json([
+          'success' => true,
+          'message' => 'Forgot password link sent to email'
+          ]);
+          case Password::INVALID_USER:
+          default:
+          return response()->json([
+          'success' => false,
+          'message' => 'Invalid user'
+          ]);
+          }
 
-        switch ($response) {
-        case Password::RESET_LINK_SENT:
-        return response()->json([
-        'success' => true,
-        'message' => 'Forgot password link sent to email'
-        ]);
-
-        case Password::INVALID_USER:
-        default:
-        return response()->json([
-        'success' => false,
-        'message' => 'Invalid user'
+        } catch (ModelNotFoundException $exception) {
+          return response()->json([
+          'success' => false,
+          'message' => back()->withError($exception->getMessage())->withInput()
         ]);
         }
+
+
     }
 
     protected function resetNotifier($token)
