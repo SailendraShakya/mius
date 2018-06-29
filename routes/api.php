@@ -40,6 +40,11 @@ Route::group(['prefix' => 'family', 'middleware' => 'jwt.auth'], function () {
 	Route::delete('delete/{id}','Api\FamilyController@destory');
 });
 
-
+Route::group(['prefix' => 'advisor', 'middleware' => 'jwt.auth'], function () {
+	Route::get('', 'Api\AdvisorController@index');
+	Route::post('store', 'Api\AdvisorController@store');
+	Route::post('/update/{id}','Api\AdvisorController@update');
+	Route::delete('delete/{id}','Api\AdvisorController@destory');
+});
 
 Route::middleware('jwt.refresh')->get('/token/refresh', 'Api\AuthController@refresh');
