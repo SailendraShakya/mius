@@ -27,7 +27,6 @@ trait RestExceptionHandlerTrait
      */
     protected function getJsonResponseForException(Request $request, Exception $e)
     {
-// dd($e);
       if($e instanceof ModelNotFoundException){
         $responseData = response()->json(['message' => $e->getMessage()], $e->getStatusCode());
       }elseif ($e instanceof UnauthorizedHttpException) {
@@ -41,6 +40,7 @@ trait RestExceptionHandlerTrait
       }elseif ($e instanceof ValidationException) {
         $responseData = response()->json(['message' => $e->getMessage()], 400);
       }else{
+        dd($e);
         $responseData = response()->json(['message' => 'Something went wrong'], 400);
       }
         return $responseData;

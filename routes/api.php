@@ -17,12 +17,9 @@ Route::post('signup', 'Api\AuthController@register');
 Route::post('login', 'Api\AuthController@login');
 Route::post('password/email', 'Auth\ForgotPasswordController@getResetToken');
 
-
 Route::group(['prefix' => 'auth', 'middleware' => 'jwt.auth'], function () {
-
     Route::get('user', 'Api\AuthController@user');
     Route::post('logout', 'Api\AuthController@logout');
-
 });
 
 Route::group(['prefix' => 'profile', 'middleware' => 'jwt.auth'], function () {
@@ -33,11 +30,15 @@ Route::group(['prefix' => 'guardian', 'middleware' => 'jwt.auth'], function () {
 	Route::get('', 'Api\GuardianController@index');
 	Route::post('store', 'Api\GuardianController@store');
 	Route::post('/update/{id}','Api\GuardianController@update');
-	// Update article
-	// Route::put('update/{id}', 'Api\GuardianController@update');
 	Route::delete('delete/{id}','Api\GuardianController@destory');
+});
 
-   });
+Route::group(['prefix' => 'family', 'middleware' => 'jwt.auth'], function () {
+	Route::get('', 'Api\FamilyController@index');
+	Route::post('store', 'Api\FamilyController@store');
+	Route::post('/update/{id}','Api\FamilyController@update');
+	Route::delete('delete/{id}','Api\FamilyController@destory');
+});
 
 
 
