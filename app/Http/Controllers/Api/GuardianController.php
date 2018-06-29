@@ -41,6 +41,7 @@ class GuardianController extends Controller
         try{
             $authUser = JWTAuth::parseToken()->authenticate();
             $user = User::find($authUser->id);
+            $this->validate($request, ['email' => 'required|email']);
             $guardian = $user->guardians()->create([
             'name' => $request->name,
             'email' => $request->email,
@@ -94,9 +95,7 @@ class GuardianController extends Controller
         }else{
             return Response::json(['error' => $guardian->errors()], 400);
         }
-
         return Response::json(['data' => 'Successfully updated'], 200);
-        // return $guardian;
     }
 
     /**

@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Http\Request;
 use App\User;
+use App\UserDetail;
 
 use App\Http\Controllers\Controller;
 
@@ -14,22 +15,31 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-    	// die('testing' );
         $user = new User;
         $user->email = $request->email;
         $user->name = $request->name;
         $user->status = 'client';
         $user->password = bcrypt($request->password);
-        $user->save();
-        return response([
-            'status' => 'success',
-            'data' => $user
-        ], 200);
+
+        if($user->save()){
+          $detail = new UserDetail($request->user_detail);
+          $user->detail()->save($detail);
+          return response([
+              'status' => 'success',
+              'data' => $user
+          ], 200);
+
+        }else{
+          return response([
+              'status' => 'fail',
+              'data' => $user
+          ], 400);
+        }
+
     }
 
     public function login(Request $request)
     {
-    	// die('login');
         $credentials = $request->only('email', 'password');
 
         if (!$token = JWTAuth::attempt($credentials)) {
@@ -63,7 +73,7 @@ class AuthController extends Controller
      */
     public function logout(Request $request) {
         $this->validate($request, ['token' => 'required']);
-        
+
         try {
             JWTAuth::invalidate($request->input('token'));
             return response([

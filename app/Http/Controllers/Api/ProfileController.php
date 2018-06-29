@@ -20,13 +20,17 @@ class ProfileController extends Controller
 
     public function logout(Request $request) {
         $this->validate($request, ['token' => 'required']);
-        
+
         try {
             JWTAuth::invalidate($request->input('token'));
             return response([
             'status' => 'success',
             'msg' => 'You have successfully logged out.'
         ]);
+        // response()->json([
+        //     'status' => 'error',
+        //     'message' => $exception->getMessage()
+        //     ], $exception->getStatusCode());
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             return response([
