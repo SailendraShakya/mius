@@ -32,7 +32,7 @@ Route::group(['prefix' => 'profile', 'middleware' => 'jwt.auth'], function () {
 Route::group(['prefix' => 'guardian', 'middleware' => 'jwt.auth'], function () {
 	Route::get('', 'Api\GuardianController@index');
 	Route::post('store', 'Api\GuardianController@store');
-	Route::match(['put', 'patch'], '/update/{id}','Api\GuardianController@update');
+	Route::post('/update/{id}','Api\GuardianController@update');
 	// Update article
 	// Route::put('update/{id}', 'Api\GuardianController@update');
 	Route::delete('delete/{id}','Api\GuardianController@destory');

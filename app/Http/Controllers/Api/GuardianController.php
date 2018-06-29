@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use App\Guardian;
 use Response;
+use Illuminate\Support\Facades\Storage;
 
 class GuardianController extends Controller
 {
@@ -41,17 +42,38 @@ class GuardianController extends Controller
         try{
             $authUser = JWTAuth::parseToken()->authenticate();
             $user = User::find($authUser->id);
-            $this->validate($request, ['email' => 'required|email']);
+            $this->validate($request, [
+              'name' => 'required',
+              'email' => 'required|email',
+              'phone' => 'required',
+              'photo' => 'required',
+              'status' => 'required',
+              'relationship' => 'required',
+            ]);
+
+            // Handle File Upload
+            if($request->hasFile('photo')){
+                $filenameWithExt = $request->file('photo')->getClientOriginalName();
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                $extension = $request->file('photo')->getClientOriginalExtension();
+                $fileNameToStore= $filename.'_'.time().'.'.$extension;
+                $path = $request->file('photo')->storeAs('public/guardian_images', $fileNameToStore);
+            } else {
+                $fileNameToStore = 'noimage.jpg';
+            }
+
+            $filename = $request->file('photo')->getClientOriginalName();
             $guardian = $user->guardians()->create([
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'photo' => $request->photo,
+            'photo' => 'public/guardian_images/'.$fileNameToStore,
             'status' => $request->status,
             'relationship' => $request->relationship,
             'created_at' => now(),
             'updated_at' => now()
             ]);
+
             return Response::json(['status'=>'sucess','data'=>$guardian], 200);
 
         }catch (Exception $e) {
@@ -81,21 +103,47 @@ class GuardianController extends Controller
     public function update(Request $request, $id)
     {
         $guardian = Guardian::find($id);
+        if(!$guardian){
+          return Response::json(['message' => 'No user with given id'], 400);
+        }
+        $this->validate($request, [
+          'name' => 'required',
+          'email' => 'required|email',
+          'phone' => 'required',
+          'photo' => 'required',
+          'status' => 'required',
+          'relationship' => 'required',
+        ]);
+
+        if($request->hasFile('photo')){
+            $filenameWithExt = $request->file('photo')->getClientOriginalName();
+            $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+            $extension = $request->file('photo')->getClientOriginalExtension();
+            $fileNameToStore= $filename.'_'.time().'.'.$extension;
+            $exists = Storage::disk('local')->exists($guardian->photo);
+            $path = $request->file('photo')->storeAs('public/guardian_images', $fileNameToStore);
+            if($exists){
+              Storage::disk('local')->delete($guardian->photo);
+            }
+        }
+
         $guardian->name = $request->name;
         $guardian->email = $request->email;
         $guardian->phone = $request->phone;
-        $guardian->photo = $request->photo;
+
+        if($request->hasFile('photo')){
+          $guardian->photo = 'public/guardian_images/'.$fileNameToStore;
+        }
         $guardian->status = $request->status;
         $guardian->relationship = $request->relationship;
         $guardian->created_at = now();
         $guardian->updated_at = now();
 
         if($guardian->save()){
-            return Response::json(['data' => 'Successfully updated'], 200);
+            return Response::json(['message' => 'Successfully updated'], 200);
         }else{
-            return Response::json(['error' => $guardian->errors()], 400);
+            return Response::json(['message' => $guardian->errors()], 400);
         }
-        return Response::json(['data' => 'Successfully updated'], 200);
     }
 
     /**
@@ -106,7 +154,20 @@ class GuardianController extends Controller
      */
     public function destory($id)
     {
-        $user = Guardian::destroy($id);
-        return $user;
+        $guardian = Guardian::find($id);
+        if(!$guardian){
+          return Response::json(['message' => 'No user with given id'], 400);
+        }
+        if($guardian->cover_image != 'noimage.jpg')
+        {
+          Storage::disk('local')->delete($guardian->photo);
+        }
+
+        if($guardian->delete())
+        {
+          return Response::json(['message' => 'Successfully Deleted'], 200);
+        }else{
+          return Response::json(['message' => $guardian->errors()], 400);
+        }
     }
 }
