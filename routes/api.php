@@ -27,6 +27,10 @@ Route::group(['prefix' => 'profile', 'middleware' => 'jwt.auth'], function () {
     Route::post('updateGoal', 'Api\ProfileController@updateGoal');
 });
 
+Route::group(['prefix' => 'sos', 'middleware' => 'jwt.auth'], function () {
+    Route::get('initiate', 'Api\SosController@initiate');
+});
+
 Route::group(['prefix' => 'guardian', 'middleware' => 'jwt.auth'], function () {
 	Route::get('', 'Api\GuardianController@index');
 	Route::post('store', 'Api\GuardianController@store');
