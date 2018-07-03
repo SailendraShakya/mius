@@ -24,6 +24,7 @@ Route::group(['prefix' => 'auth', 'middleware' => 'jwt.auth'], function () {
 
 Route::group(['prefix' => 'profile', 'middleware' => 'jwt.auth'], function () {
     Route::post('uploadImage', 'Api\ProfileController@uploadImage');
+    
     Route::post('updateGoal', 'Api\ProfileController@updateGoal');
 });
 
