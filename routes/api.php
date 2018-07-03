@@ -24,6 +24,7 @@ Route::group(['prefix' => 'auth', 'middleware' => 'jwt.auth'], function () {
 
 Route::group(['prefix' => 'profile', 'middleware' => 'jwt.auth'], function () {
     Route::post('uploadImage', 'Api\ProfileController@uploadImage');
+    Route::post('updateGoal', 'Api\ProfileController@updateGoal');
 });
 
 Route::group(['prefix' => 'guardian', 'middleware' => 'jwt.auth'], function () {
@@ -45,6 +46,13 @@ Route::group(['prefix' => 'advisor', 'middleware' => 'jwt.auth'], function () {
 	Route::post('store', 'Api\AdvisorController@store');
 	Route::post('/update/{id}','Api\AdvisorController@update');
 	Route::delete('delete/{id}','Api\AdvisorController@destory');
+});
+
+Route::group(['prefix' => 'friend', 'middleware' => 'jwt.auth'], function () {
+	Route::get('', 'Api\FriendController@index');
+	Route::post('store', 'Api\FriendController@store');
+	Route::post('/update/{id}','Api\FriendController@update');
+	Route::delete('delete/{id}','Api\FriendController@destory');
 });
 
 Route::middleware('jwt.refresh')->get('/token/refresh', 'Api\AuthController@refresh');
