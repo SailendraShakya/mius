@@ -18,8 +18,23 @@ class SosController extends Controller
 {
     public function initiate()
     {
-        Twilio::message('+9779845886831', 'k cha hal khabar');
-        die('testing');
+        // initialize message array
+        $message_array = array(
+        'sender_id'     => 'AC2e761e2358b8df4165aa1e4df22e8d72',
+        'sender_secret' => '8df54f39830ff2bc9c2f1aa2f524bc8e',
+        'receiver_mobile' => '+9779841398441',
+        'otp'     =>'325456',
+        'sender' => '+16145004382'
+        );
+
+        // This will send OTP only
+        $sms_response = Twilio::message($message_array,$op="otp only", false, true,  false ); // otp
+
+        return response()->json($sms_response,200);
+
+
+
+
         /*$authUser = JWTAuth::parseToken()->authenticate();
         $user = User::find($authUser->id);
         if(!$user){

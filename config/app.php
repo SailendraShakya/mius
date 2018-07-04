@@ -164,7 +164,7 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
 
-        Aloha\Twilio\Support\Laravel\ServiceProvider::class,
+        Lakshmaji\Twilio\TwilioServiceProvider::class,
 
 
     ],
@@ -220,11 +220,8 @@ return [
 
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
-        'Twilio' => Aloha\Twilio\Support\Laravel\Facade::class,
 
-
-
-
+        'Twilio' => Lakshmaji\Twilio\Facade\Twilio::class,
     ],
 
 ];
