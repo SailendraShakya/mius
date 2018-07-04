@@ -18,15 +18,16 @@ class SosController extends Controller
 {
     public function initiate()
     {
-        $authUser = JWTAuth::parseToken()->authenticate();
+        Twilio::message('+9779845886831', 'k cha hal khabar');
+        die('testing');
+        /*$authUser = JWTAuth::parseToken()->authenticate();
         $user = User::find($authUser->id);
         if(!$user){
             return Response::json(['status' => 'User not found',], 400);
         }
         $detail = $user->detail;
         $detail->sos_status = 1;
-        Twilio::message('+9779845886831', 'k cha hal khabar');
-        die('testing');
+
         if($detail->save())
         {
             foreach ($user->guardians as $key => $guardian) {
@@ -35,7 +36,7 @@ class SosController extends Controller
             return Response::json(['message'=>'Sos successfully initiated','data'=>$detail], 200);
         }else{
           return Response::json(['message'=>'Something went wrong while initiating sos','data'=>$user], 400);
-        }
+        }*/
 
 
     }
