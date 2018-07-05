@@ -10,11 +10,11 @@
             <li class="nav-title">Components</li>
             <li class="nav-item">
               <a class="nav-link" href="{!! url('/users'); !!}">
-                <i class="nav-icon icon-drop"></i> Users</a>
+                <i class="fa fa-user-o"></i> Users</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="typography.html">
-                <i class="nav-icon icon-pencil"></i> Typography</a>
+              <a class="nav-link" href="{!! url('/calm'); !!}">
+                <i class="fa fa-soccer-ball-o"></i> Calm</a>
             </li>
             <li class="divider"></li>
             <li class="nav-title">Extras</li>
@@ -31,4 +31,4 @@
           </ul>
         </nav>
 <button class="sidebar-minimizer brand-minimizer" type="button"></button>
-      </div>        
+      </div>
