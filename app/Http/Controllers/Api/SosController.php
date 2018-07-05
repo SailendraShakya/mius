@@ -49,7 +49,7 @@ class SosController extends Controller
         foreach ($user->guardians as $key => $guardian) {
           $phone = $guardian->phone;
           $message = "Sos initate for this user";
-          // $this->send_sms($phone, $message);
+          $this->send_sms('+9779841398441', 'Testing');
         }
         return Response::json(['message'=>'Sos initiate successfully','data'=>$user], 200);
 

@@ -164,6 +164,9 @@ return [
 
         Collective\Html\HtmlServiceProvider::class,
 
+        Aloha\Twilio\Support\Laravel\ServiceProvider::class,
+
+
     ],
 
     /*
@@ -217,6 +220,8 @@ return [
 
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
+        'Twilio' => Aloha\Twilio\Support\Laravel\Facade::class,
+
 
 
 
