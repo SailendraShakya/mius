@@ -31,7 +31,8 @@ class AuthController extends Controller
 
         }else{
           return response([
-              'status' => 'fail',
+              'title' => 'Fail to create user',
+              'message' => 'Fail to create user',
               'data' => $user
           ], 400);
         }
@@ -41,12 +42,15 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
+        $this->validate($request, [
+          'email' => 'email|required',
+          'password' => 'required'
+        ]);
 
         if (!$token = JWTAuth::attempt($credentials)) {
             return response([
-                'status' => 'error',
-                'error' => 'invalid.credentials',
-                'msg' => 'Invalid Credentials.'
+                'title' => 'Invalid Credentials',
+                'message' => 'Invalid Credentials'
             ], 400);
         }
         return response([
@@ -83,8 +87,8 @@ class AuthController extends Controller
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             return response([
-                'status' => 'error',
-                'msg' => 'Failed to logout, please try again.'
+                'title' => 'Failed to logout',
+                'message' => 'Failed to logout, please try again.'
             ]);
         }
     }

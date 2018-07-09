@@ -51,10 +51,10 @@ class SosController extends Controller
           $message = "Sos initate for this user";
           // $this->send_sms('+9779841398441', 'Testing');
         }
-        return Response::json(['message'=>'Sos initiate successfully','data'=>$user], 200);
+        return Response::json(['status' => 'success', 'message'=>'Sos initiate successfully','data'=>$user], 200);
 
       }else{
-        return Response::json(['message'=>'Error while initiating sos','data'=>$user], 400);
+        return Response::json(['title' => 'Error', 'message'=>'Error while initiating sos','data'=>$user], 400);
       }
     }
 }

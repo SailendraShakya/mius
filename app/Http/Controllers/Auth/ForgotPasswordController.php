@@ -49,13 +49,13 @@ class ForgotPasswordController extends Controller
     public function getResetToken(Request $request)
     {
         if(!$request->has('email')){
-          return response()->json(['success' => false, 'message' => 'Invalid key'], 400);
+          return response()->json(['title' => 'Error', 'message' => 'Invalid key'], 400);
         }
         try {
           $this->validate($request, ['email' => 'required|email']);
           $user = User::where('email', $request->input('email'))->first();
           if (!$user) {
-              return response()->json(Json::response(null, trans('passwords.user')), 400);
+              return response()->json(['title' => 'No user found', 'message' => 'No user with given id'], 400);
           }
           $token = $this->broker()->createToken($user);
           $response = $this->broker()->sendResetLink(
@@ -65,20 +65,20 @@ class ForgotPasswordController extends Controller
           switch ($response) {
           case Password::RESET_LINK_SENT:
           return response()->json([
-          'success' => true,
+          'status' => 'success',
           'message' => 'Forgot password link sent to email'
           ]);
           case Password::INVALID_USER:
           default:
           return response()->json([
-          'success' => false,
+          'title' => 'Error',
           'message' => 'Invalid user'
           ]);
           }
 
         } catch (ModelNotFoundException $exception) {
           return response()->json([
-          'success' => false,
+          'title' => 'Error',
           'message' => back()->withError($exception->getMessage())->withInput()
         ]);
         }
