@@ -32,7 +32,7 @@ class AuthController extends Controller
         }else{
           return response([
               'title' => 'Fail to create user',
-              'message' => 'Fail to create user'
+              'message' => 'Fail to create user',
               'data' => $user
           ], 400);
         }
