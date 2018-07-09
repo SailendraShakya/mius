@@ -20,7 +20,7 @@ class FriendController extends Controller
             $friends = $user->friends;
             return Response::json(['status'=>'sucess','data'=>$friends], 200);
         } catch (Exception $e) {
-            return Response::json(['status' => 'error',], 400);
+            return Response::json(['title' => 'Error', 'message' => 'Failed to fetch friends'], 400);
         }
 
     }

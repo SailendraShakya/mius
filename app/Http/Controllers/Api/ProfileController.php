@@ -19,7 +19,7 @@ class ProfileController extends Controller
       $authUser = JWTAuth::parseToken()->authenticate();
       $user = User::find($authUser->id);
       if(!$user){
-          return Response::json(['status' => 'User not found',], 400);
+        return Response::json(['title' => 'No user found', 'message' => 'No user with given id'], 400);
       }
       $this->validate($request, [
         'goals' => 'required|numeric',
@@ -27,9 +27,9 @@ class ProfileController extends Controller
       $detail = $user->detail;
       $detail->goals = $request->goals;
       if($detail->save()){
-          return Response::json(['message'=>'Goals successfully updated','data'=>$detail], 200);
+          return Response::json(['status' => 'success', 'message'=>'Goals successfully updated','data'=>$detail], 200);
       }else{
-          return Response::json(['message'=>'Error while updating goals','data'=>$detail], 200);
+          return Response::json(['title' => 'Error', 'message'=>'Error while updating goals','data'=>$detail], 200);
       }
     }
 
@@ -39,7 +39,7 @@ class ProfileController extends Controller
             $authUser = JWTAuth::parseToken()->authenticate();
             $user = User::find($authUser->id);
             if(!$user){
-                return Response::json(['status' => 'User not found',], 400);
+                return Response::json(['title' => 'No user found', 'message' => 'No user with given id'], 400);
             }
             $detail = $user->detail;
 
@@ -64,9 +64,9 @@ class ProfileController extends Controller
             $detail->photo = 'public/profile_images/'.$fileNameToStore;
             $detail->created_at = now();
             $detail->save();
-            return Response::json(['message'=>'Image successfully uploaded','data'=>$detail], 200);
+            return Response::json(['status' => 'success', 'message'=>'Image successfully uploaded','data'=>$detail], 200);
         } catch (Exception $e) {
-            return Response::json(['message' => 'error while uplaoding image',], 400);
+            return Response::json(['title' => 'Error', 'message' => 'error while uplaoding image',], 400);
         }
     }
 
@@ -76,13 +76,13 @@ class ProfileController extends Controller
             JWTAuth::invalidate($request->input('token'));
             return response([
             'status' => 'success',
-            'msg' => 'You have successfully logged out.'
+            'message' => 'You have successfully logged out.'
         ]);
         } catch (JWTException $e) {
             // something went wrong whilst attempting to encode the token
             return response([
-                'status' => 'error',
-                'msg' => 'Failed to logout, please try again.'
+                'title' => 'Error',
+                'message' => 'Failed to logout, please try again.'
             ]);
         }
     }

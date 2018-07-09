@@ -25,7 +25,7 @@ class GuardianController extends Controller
             $guardians = $user->guardians;
             return Response::json(['status'=>'success','data'=>$guardians], 200);
         } catch (Exception $e) {
-            return Response::json(['status' => 'error',], 400);
+            return Response::json(['title' => 'Error', 'message' => 'Failed to fetch guardian'], 400);
         }
 
     }
@@ -76,7 +76,7 @@ class GuardianController extends Controller
             return Response::json(['status'=>'sucess','data'=>$guardian], 200);
 
         }catch (Exception $e) {
-            return Response::json(['status' => 'error'], 400);
+            return Response::json(['title' => 'Error', 'message' => 'Failed to add guardian'], 400);
         }
     }
 
@@ -103,7 +103,7 @@ class GuardianController extends Controller
     {
         $guardian = Guardian::find($id);
         if(!$guardian){
-          return Response::json(['message' => 'No user with given id'], 400);
+          return Response::json(['title' => 'No user found', 'message' => 'No user with given id'], 400);
         }
         $this->validate($request, [
           'name' => 'required',
@@ -139,9 +139,9 @@ class GuardianController extends Controller
         $guardian->updated_at = now();
 
         if($guardian->save()){
-            return Response::json(['message' => 'Successfully updated'], 200);
+            return Response::json(['status' => 'success', 'message' => 'Successfully updated'], 200);
         }else{
-            return Response::json(['message' => $guardian->errors()], 400);
+            return Response::json(['status' => 'Error', 'message' => $guardian->errors()], 400);
         }
     }
 
@@ -155,7 +155,7 @@ class GuardianController extends Controller
     {
         $guardian = Guardian::find($id);
         if(!$guardian){
-          return Response::json(['message' => 'No user with given id'], 400);
+          return Response::json(['title' => 'No user found', 'message' => 'No user with given id'], 400);
         }
         if($guardian->cover_image != 'noimage.jpg')
         {
@@ -164,9 +164,9 @@ class GuardianController extends Controller
 
         if($guardian->delete())
         {
-          return Response::json(['message' => 'Successfully Deleted'], 200);
+          return Response::json(['status' => 'success', 'message' => 'Successfully Deleted'], 200);
         }else{
-          return Response::json(['message' => $guardian->errors()], 400);
+          return Response::json(['title' => 'Error', 'message' => $guardian->errors()], 400);
         }
     }
 }

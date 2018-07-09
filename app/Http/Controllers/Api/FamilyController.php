@@ -21,7 +21,7 @@ class FamilyController extends Controller
             $families = $user->families;
             return Response::json(['status'=>'sucess','data'=>$families], 200);
         } catch (Exception $e) {
-            return Response::json(['status' => 'error',], 400);
+            return Response::json(['title' => 'Error','message' => 'Failed to fetch families'], 400);
         }
 
     }
@@ -57,11 +57,9 @@ class FamilyController extends Controller
             'created_at' => now(),
             'updated_at' => now()
             ]);
-
             return Response::json(['status'=>'sucess','data'=>$family], 200);
-
         }catch (Exception $e) {
-            return Response::json(['status' => 'error'], 400);
+            return Response::json(['title' => 'error', 'message' => 'Failed to create Family'], 400);
         }
     }
 
@@ -76,8 +74,9 @@ class FamilyController extends Controller
     {
         $family = Family::find($id);
         if(!$family){
-          return Response::json(['message' => 'No user with given id'], 400);
+          return Response::json(['title' => 'No user found', 'message' => 'No user with given id'], 400);
         }
+
         $this->validate($request, [
           'name' => 'required',
           'email' => 'required|email',
@@ -99,9 +98,9 @@ class FamilyController extends Controller
         $family->updated_at = now();
 
         if($family->save()){
-            return Response::json(['message' => 'Successfully updated'], 200);
+            return Response::json(['status' => 'success', 'message' => 'Successfully updated'], 200);
         }else{
-            return Response::json(['message' => $family->errors()], 400);
+            return Response::json(['title' => 'Error', 'message' => $family->errors()], 400);
         }
     }
 
@@ -116,9 +115,9 @@ class FamilyController extends Controller
         $family = Family::find($id);
         if($family->delete())
         {
-          return Response::json(['message' => 'Successfully Deleted'], 200);
+          return Response::json(['status' => 'success', 'message' => 'Successfully Deleted'], 200);
         }else{
-          return Response::json(['message' => $family->errors()], 400);
+          return Response::json(['title' => 'Error', 'message' => $family->errors()], 400);
         }
     }
 }

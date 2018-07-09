@@ -15,7 +15,7 @@ class CalmController extends Controller
           $calm = Calm::all();
             return Response::json(['status'=>'sucess','data'=>$calm], 200);
         } catch (Exception $e) {
-            return Response::json(['status' => 'error',], 400);
+            return Response::json(['title' => 'error', 'message' => 'Failed to fetch calm exercise'], 400);
         }
     }
 }

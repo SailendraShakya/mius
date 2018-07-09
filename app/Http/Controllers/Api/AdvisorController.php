@@ -25,7 +25,7 @@ class AdvisorController extends Controller
             $advisors = $user->advisors;
             return Response::json(['status'=>'sucess','data'=>$advisors], 200);
         } catch (Exception $e) {
-            return Response::json(['status' => 'error',], 400);
+            return Response::json(['title' => 'Error', 'message' => 'Failed to fetch users'], 400);
         }
 
     }
@@ -63,7 +63,7 @@ class AdvisorController extends Controller
             return Response::json(['status'=>'sucess','data'=>$advisor], 200);
 
         }catch (Exception $e) {
-            return Response::json(['status' => 'error'], 400);
+            return Response::json(['title' => 'Failed','message' => 'Failed to create advisor'], 400);
         }
     }
 
@@ -90,7 +90,7 @@ class AdvisorController extends Controller
     {
         $advisor = Advisor::find($id);
         if(!$advisor){
-          return Response::json(['message' => 'No user with given id'], 400);
+          return Response::json(['title' => 'No user found', 'message' => 'No user with given id'], 400);
         }
         $this->validate($request, [
           'name' => 'required',
@@ -111,9 +111,9 @@ class AdvisorController extends Controller
         $advisor->updated_at = now();
 
         if($advisor->save()){
-            return Response::json(['message' => 'Successfully updated'], 200);
+            return Response::json(['status' => 'success', 'message' => 'Successfully updated'], 200);
         }else{
-            return Response::json(['message' => $advisor->errors()], 400);
+            return Response::json(['title' => 'Error', 'message' => $advisor->errors()], 400);
         }
     }
 
@@ -127,13 +127,13 @@ class AdvisorController extends Controller
     {
         $advisor = Advisor::find($id);
         if(!$advisor){
-          return Response::json(['message' => 'No user with given id'], 400);
+          return Response::json(['title' => 'No user found', 'message' => 'No user with given id'], 400);
         }
         if($advisor->delete())
         {
-          return Response::json(['message' => 'Successfully Deleted'], 200);
+          return Response::json(['status' => 'success', 'message' => 'Successfully Deleted'], 200);
         }else{
-          return Response::json(['message' => $advisor->errors()], 400);
+          return Response::json(['title' => 'Error', 'message' => $advisor->errors()], 400);
         }
     }
 }
