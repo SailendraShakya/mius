@@ -16,6 +16,10 @@
               <a class="nav-link" href="{!! url('/calm'); !!}">
                 <i class="fa fa-soccer-ball-o"></i> Calm</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="{!! url('/prize'); !!}">
+                <i class="fa fa-gift"></i> Prize</a>
+            </li>
             <li class="divider"></li>
             <li class="nav-title">Extras</li>
             <li class="nav-item nav-dropdown">

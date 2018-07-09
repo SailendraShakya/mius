@@ -16,6 +16,7 @@ Route::get('/', 'HomeController@index');
 Auth::routes();
 
 Route::resource('calm', 'CalmController');
+Route::resource('prize', 'PrizeController');
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('users', 'UserController@index');
