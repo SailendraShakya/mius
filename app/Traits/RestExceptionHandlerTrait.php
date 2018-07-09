@@ -28,20 +28,40 @@ trait RestExceptionHandlerTrait
     protected function getJsonResponseForException(Request $request, Exception $e)
     {
       if($e instanceof ModelNotFoundException){
-        $responseData = response()->json(['message' => $e->getMessage()], $e->getStatusCode());
+        $responseData = response()->json(
+          ['title' => 'Model not found', 'message' => $e->getMessage()],
+           $e->getStatusCode()
+         );
       }elseif ($e instanceof UnauthorizedHttpException) {
-        $responseData = response()->json(['message' => $e->getMessage()], $e->getStatusCode());
+        $responseData = response()->json(
+          ['title' => 'Unauthorized request', 'message' => $e->getMessage()],
+          $e->getStatusCode()
+        );
       }elseif ($e instanceof MethodNotAllowedHttpException ) {
-        $responseData = response()->json(['message' => 'Method not allowed'], $e->getStatusCode());
+        $responseData = response()->json(
+          ['title' => 'Method not allowed', 'message' => 'Method not allowed'],
+          $e->getStatusCode()
+        );
       }elseif ($e instanceof NotFoundHttpException) {
-        $responseData = response()->json(['message' => 'Page not found'], $e->getStatusCode());
+        $responseData = response()->json(
+          ['title' => 'Page not found', 'message' => 'Page not found'],
+          $e->getStatusCode()
+        );
       }elseif ($e instanceof QueryException) {
-        $responseData = response()->json(['message' => $e->getMessage()], 400);
+        $responseData = response()->json(
+          ['title' => 'Error in query', 'message' => $e->getMessage()],
+          400
+        );
       }elseif ($e instanceof ValidationException) {
-        $responseData = response()->json(['message' => $e->getMessage()], 400);
+        $responseData = response()->json(
+          ['title' => 'Validation error', 'message' => $e->getMessage()],
+          400
+        );
       }else{
-        dd($e);
-        $responseData = response()->json(['message' => 'Something went wrong'], 400);
+        $responseData = response()->json(
+          ['title' => 'Generic Error', 'message' => 'Something went wrong'],
+          400
+        );
       }
         return $responseData;
     }

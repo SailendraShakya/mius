@@ -23,7 +23,7 @@ class GuardianController extends Controller
             $authUser = JWTAuth::parseToken()->authenticate();
             $user = User::find($authUser->id);
             $guardians = $user->guardians;
-            return Response::json(['status'=>'sucess','data'=>$guardians], 200);
+            return Response::json(['status'=>'success','data'=>$guardians], 200);
         } catch (Exception $e) {
             return Response::json(['status' => 'error',], 400);
         }
